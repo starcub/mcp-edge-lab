@@ -1,0 +1,6 @@
+{
+  "admin_required": {
+    "ContentType": "APPLICATION_JSON",
+    "Content": "{\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32001,\"message\":\"Blocked at edge: admin key required for this tool\"}}"
+  }
+}

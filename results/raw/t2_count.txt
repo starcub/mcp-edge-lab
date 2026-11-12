@@ -1,0 +1,2 @@
+$ ./tests/t2_rate.sh   # rate-per-ip action = Count
+ 300 200

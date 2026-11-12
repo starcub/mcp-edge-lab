@@ -1,0 +1,7 @@
+{"@timestamp": "2026-11-12 10:29:10.495", "action": "ALLOW", "terminatingRuleId": "Default_Action", "method": "POST", "ip": "2401:d002:x:x:x:x:x:x"}
+{"@timestamp": "2026-11-12 10:29:14.246", "action": "ALLOW", "terminatingRuleId": "Default_Action", "method": "GET", "ip": "2401:d002:x:x:x:x:x:x"}
+{"@timestamp": "2026-11-12 10:29:14.249", "action": "ALLOW", "terminatingRuleId": "Default_Action", "method": "POST", "ip": "2401:d002:x:x:x:x:x:x"}
+{"@timestamp": "2026-11-12 10:29:15.266", "action": "ALLOW", "terminatingRuleId": "Default_Action", "method": "POST", "ip": "2401:d002:x:x:x:x:x:x"}
+{"@timestamp": "2026-11-12 10:29:16.072", "action": "ALLOW", "terminatingRuleId": "Default_Action", "method": "GET", "ip": "2401:d002:x:x:x:x:x:x"}
+{"@timestamp": "2026-11-12 10:29:16.264", "action": "ALLOW", "terminatingRuleId": "Default_Action", "method": "POST", "ip": "2401:d002:x:x:x:x:x:x"}
+{"@timestamp": "2026-11-12 10:29:16.790", "action": "ALLOW", "terminatingRuleId": "Default_Action", "method": "DELETE", "ip": "2401:d002:x:x:x:x:x:x"}

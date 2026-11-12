@@ -1,0 +1,26 @@
+$ mcp "$DIRECT_URL" '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' -w "\nHTTP %{http_code}\n"
+event: message
+data: {"jsonrpc":"2.0","id":1,"result":{"tools":[{"name":"lookup_order","description":"Look up the status of an order by its ID.","inputSchema":{"properties":{"order_id":{"title":"Order Id","type":"string"}},"required":["order_id"],"title":"lookup_orderArguments","type":"object"}},{"name":"get_account_balance","description":"Return the current account balance for a customer.","inputSchema":{"properties":{"customer_id":{"title":"Customer Id","type":"string"}},"required":["customer_id"],"title":"get_account_balanceArguments","type":"object"}},{"name":"refund_payment","description":"Refund part or all of an order. This moves real money.","inputSchema":{"properties":{"order_id":{"title":"Order Id","type":"string"},"amount":{"title":"Amount","type":"number"}},"required":["order_id","amount"],"title":"refund_paymentArguments","type":"object"}}]}}
+
+
+HTTP 200
+$ mcp "$DIRECT_URL" '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"lookup_order","arguments":{"order_id":"A1001"}}}' -w "\nHTTP %{http_code}\n"
+event: message
+data: {"jsonrpc":"2.0","id":2,"result":{"content":[{"type":"text","text":"{\n  \"status\": \"shipped\",\n  \"total\": 42.5\n}"}],"isError":false}}
+
+
+HTTP 200
+$ mcp "$DIRECT_URL" '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"get_account_balance","arguments":{"customer_id":"cust-7"}}}' -w "\nHTTP %{http_code}\n"
+event: message
+data: {"jsonrpc":"2.0","id":3,"result":{"content":[{"type":"text","text":"{\n  \"customer_id\": \"cust-7\",\n  \"balance\": 1830.22\n}"}],"isError":false}}
+
+
+HTTP 200
+$ mcp "$DIRECT_URL" '{"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"refund_payment","arguments":{"order_id":"A1001","amount":42.5}}}' -w "\nHTTP %{http_code}\n"
+event: message
+data: {"jsonrpc":"2.0","id":4,"result":{"content":[{"type":"text","text":"{\n  \"order_id\": \"A1001\",\n  \"refunded\": 42.5,\n  \"status\": \"queued\"\n}"}],"isError":false}}
+
+
+HTTP 200
+{"jsonrpc":"2.0","error":{"code":-32001,"message":"Missing Authentication Token"}}
+HTTP 401

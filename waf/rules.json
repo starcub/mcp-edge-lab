@@ -1,0 +1,150 @@
+[
+  {
+    "Name": "AWS-AWSManagedRulesAmazonIpReputationList",
+    "Priority": 10,
+    "OverrideAction": { "None": {} },
+    "Statement": {
+      "ManagedRuleGroupStatement": { "VendorName": "AWS", "Name": "AWSManagedRulesAmazonIpReputationList" }
+    },
+    "VisibilityConfig": {
+      "SampledRequestsEnabled": true,
+      "CloudWatchMetricsEnabled": true,
+      "MetricName": "AWS-AWSManagedRulesAmazonIpReputationList"
+    }
+  },
+  {
+    "Name": "rate-per-ip",
+    "Priority": 20,
+    "Action": { "Count": {} },
+    "Statement": {
+      "RateBasedStatement": {
+        "Limit": 100,
+        "EvaluationWindowSec": 60,
+        "AggregateKeyType": "IP"
+      }
+    },
+    "VisibilityConfig": {
+      "SampledRequestsEnabled": true,
+      "CloudWatchMetricsEnabled": true,
+      "MetricName": "rate-per-ip"
+    }
+  },
+  {
+    "Name": "AWS-AWSManagedRulesCommonRuleSet",
+    "Priority": 30,
+    "OverrideAction": { "None": {} },
+    "Statement": {
+      "ManagedRuleGroupStatement": { "VendorName": "AWS", "Name": "AWSManagedRulesCommonRuleSet" }
+    },
+    "VisibilityConfig": {
+      "SampledRequestsEnabled": true,
+      "CloudWatchMetricsEnabled": true,
+      "MetricName": "AWS-AWSManagedRulesCommonRuleSet"
+    }
+  },
+  {
+    "Name": "AWS-AWSManagedRulesKnownBadInputsRuleSet",
+    "Priority": 40,
+    "OverrideAction": { "None": {} },
+    "Statement": {
+      "ManagedRuleGroupStatement": { "VendorName": "AWS", "Name": "AWSManagedRulesKnownBadInputsRuleSet" }
+    },
+    "VisibilityConfig": {
+      "SampledRequestsEnabled": true,
+      "CloudWatchMetricsEnabled": true,
+      "MetricName": "AWS-AWSManagedRulesKnownBadInputsRuleSet"
+    }
+  },
+  {
+    "Name": "AWS-AWSManagedRulesSQLiRuleSet",
+    "Priority": 50,
+    "OverrideAction": { "None": {} },
+    "Statement": {
+      "ManagedRuleGroupStatement": { "VendorName": "AWS", "Name": "AWSManagedRulesSQLiRuleSet" }
+    },
+    "VisibilityConfig": {
+      "SampledRequestsEnabled": true,
+      "CloudWatchMetricsEnabled": true,
+      "MetricName": "AWS-AWSManagedRulesSQLiRuleSet"
+    }
+  },
+  {
+    "Name": "no-jsonrpc-batches",
+    "Priority": 60,
+    "Action": { "Block": {} },
+    "Statement": {
+      "RegexMatchStatement": {
+        "RegexString": "^\\s*\\[",
+        "FieldToMatch": { "Body": { "OversizeHandling": "CONTINUE" } },
+        "TextTransformations": [{ "Priority": 0, "Type": "NONE" }]
+      }
+    },
+    "VisibilityConfig": {
+      "SampledRequestsEnabled": true,
+      "CloudWatchMetricsEnabled": true,
+      "MetricName": "no-jsonrpc-batches"
+    }
+  },
+  {
+    "Name": "refund-needs-admin-key",
+    "Priority": 70,
+    "Action": {
+      "Block": {
+        "CustomResponse": { "ResponseCode": 403, "CustomResponseBodyKey": "admin_required" }
+      }
+    },
+    "Statement": {
+      "AndStatement": {
+        "Statements": [
+          {
+            "ByteMatchStatement": {
+              "FieldToMatch": {
+                "JsonBody": {
+                  "MatchPattern": { "IncludedPaths": ["/method"] },
+                  "MatchScope": "VALUE",
+                  "InvalidFallbackBehavior": "MATCH",
+                  "OversizeHandling": "MATCH"
+                }
+              },
+              "PositionalConstraint": "EXACTLY",
+              "SearchString": "tools/call",
+              "TextTransformations": [{ "Priority": 0, "Type": "NONE" }]
+            }
+          },
+          {
+            "ByteMatchStatement": {
+              "FieldToMatch": {
+                "JsonBody": {
+                  "MatchPattern": { "IncludedPaths": ["/params/name"] },
+                  "MatchScope": "VALUE",
+                  "InvalidFallbackBehavior": "MATCH",
+                  "OversizeHandling": "MATCH"
+                }
+              },
+              "PositionalConstraint": "EXACTLY",
+              "SearchString": "refund_payment",
+              "TextTransformations": [{ "Priority": 0, "Type": "NONE" }]
+            }
+          },
+          {
+            "NotStatement": {
+              "Statement": {
+                "ByteMatchStatement": {
+                  "FieldToMatch": { "SingleHeader": { "Name": "x-admin-key" } },
+                  "PositionalConstraint": "EXACTLY",
+                  "SearchString": "{{ADMIN_KEY}}",
+                  "TextTransformations": [{ "Priority": 0, "Type": "NONE" }]
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "VisibilityConfig": {
+      "SampledRequestsEnabled": true,
+      "CloudWatchMetricsEnabled": true,
+      "MetricName": "refund-needs-admin-key"
+    }
+  }
+]

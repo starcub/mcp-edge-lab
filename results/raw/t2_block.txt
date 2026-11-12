@@ -1,0 +1,14 @@
+$ ./tests/t2_rate.sh   # rate-per-ip action = Block (429 + retry-after)
+ 201 200
+  99 429
+
+$ mcp "$EDGE_URL" tools/list -i   # one more call while blocked
+HTTP/2 429 
+server: CloudFront
+date: Thu, 12 Nov 2026 10:36:36 GMT
+content-length: 0
+retry-after: 60
+x-cache: Error from cloudfront
+via: 1.1 b510c101e671f283208a5664b442c496.cloudfront.net (CloudFront)
+x-amz-cf-pop: BNE50-P2
+
