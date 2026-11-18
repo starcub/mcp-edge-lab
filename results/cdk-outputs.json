@@ -8,7 +8,6 @@
     "WafLogGroup": "aws-waf-logs-mcp-edge",
     "RuntimeArn": "arn:aws:bedrock-agentcore:us-east-1:137914536528:runtime/orders_mcp-Mk7eFE6d96",
     "ClientId": "45eo8djpili3d0ada544le81rl",
-    "Poison": "false",
     "DistributionId": "ELK2FOH46UIKE",
     "WebAclArn": "arn:aws:wafv2:us-east-1:137914536528:global/webacl/mcp-edge/3c510b92-92ed-4b80-b97f-6ad542cb45d8",
     "EdgeUrl": "https://dnsos9eefh1lh.cloudfront.net/"

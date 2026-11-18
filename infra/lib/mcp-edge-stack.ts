@@ -27,10 +27,8 @@ export class McpEdgeStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // Context flags: -c rateAction=count|block, -c poison=true|false,
-    // -c originRequestPolicy=allViewer|allViewerExceptHost
+    // Context flags: -c rateAction=count|block, -c originRequestPolicy=allViewer|allViewerExceptHost
     const rateAction = String(this.node.tryGetContext('rateAction') ?? 'count').toLowerCase();
-    const poison = String(this.node.tryGetContext('poison') ?? 'false') === 'true';
     const orpChoice = String(this.node.tryGetContext('originRequestPolicy') ?? 'allViewer');
 
     const adminKey = new cdk.CfnParameter(this, 'AdminKey', {
@@ -70,7 +68,6 @@ export class McpEdgeStack extends cdk.Stack {
       }),
       protocolConfiguration: agentcore.ProtocolType.MCP,
       authorizerConfiguration: agentcore.RuntimeAuthorizerConfiguration.usingCognito(pool, [client]),
-      environmentVariables: { POISON: poison ? '1' : '0' },
     });
 
     // The runtime ARN is a deploy-time token, so URL-encode it from its parts.
@@ -154,6 +151,5 @@ export class McpEdgeStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'WebAclId', { value: acl.attrId });
     new cdk.CfnOutput(this, 'WafLogGroup', { value: wafLogs.logGroupName });
     new cdk.CfnOutput(this, 'RateAction', { value: rateAction });
-    new cdk.CfnOutput(this, 'Poison', { value: String(poison) });
   }
 }

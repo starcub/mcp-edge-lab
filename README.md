@@ -3,7 +3,7 @@
 Companion repo for **"Put Your MCP Servers Behind CloudFront and WAF Before Someone Else Finds Them"**.
 
 One small MCP server on Amazon Bedrock AgentCore Runtime, one CloudFront distribution, one AWS WAF
-web ACL with seven rules, and five red-team tests. Everything is one CDK stack in `us-east-1`.
+web ACL with seven rules, and four red-team tests. Everything is one CDK stack in `us-east-1`.
 Measured results from a real run are in [`results/RESULTS.md`](results/RESULTS.md).
 
 ```
@@ -12,7 +12,7 @@ mcp-edge-lab/
 ├── infra/       CDK app (TypeScript): Cognito, AgentCore Runtime, CloudFront, WAF, WAF logging
 ├── waf/         rules.json (+ custom response body, 429 block action) – the stack loads these files as-is
 ├── tests/       env.sh, setup_user.sh, naked.sh, t1_client.py, t2_rate.sh, t3_refund.sh,
-│                t4_injection.sh, t5_poison.sh, latency.sh, waf_logs.sh
+│                t4_injection.sh, latency.sh, waf_logs.sh
 └── results/     RESULTS.md, raw outputs, metric graphs
 ```
 
@@ -50,10 +50,9 @@ Context flags (pass with `-c`):
 | Flag | Values | Default | Used for |
 |---|---|---|---|
 | `rateAction` | `count`, `block` | `count` | T2: run once in Count, once in Block (429 + `retry-after: 60`) |
-| `poison` | `true`, `false` | `false` | T5: ships the poisoned `lookup_order` description (`POISON=1` env var) |
 | `originRequestPolicy` | `allViewer`, `allViewerExceptHost` | `allViewer` | CloudFront origin request policy |
 
-Always pass every flag you want on each deploy, e.g. `npx cdk deploy -c rateAction=block -c poison=false`.
+Always pass every flag you want on each deploy, e.g. `npx cdk deploy -c rateAction=block`.
 
 ## Run the tests
 
@@ -65,8 +64,6 @@ uv run --python 3.12 --with 'mcp==1.30.0' python tests/t1_client.py   # T1
 ./tests/t2_rate.sh             # T2 with -c rateAction=count, then redeploy with block and run again
 ./tests/t3_refund.sh           # T3: no key / key / batch / direct URL
 ./tests/t4_injection.sh        # T4: SQLi + 169.254.169.254 SSRF
-(cd infra && npx cdk deploy -c rateAction=block -c poison=true)  && ./tests/t5_poison.sh   # T5
-(cd infra && npx cdk deploy -c rateAction=block -c poison=false)                            # undo T5
 ./tests/latency.sh             # 20 runs each, warm-up dropped, median + p90 (MODES="new reuse" by default)
 ./tests/waf_logs.sh <start-epoch> <end-epoch>   # Logs Insights evidence (client IPs masked)
 ```
